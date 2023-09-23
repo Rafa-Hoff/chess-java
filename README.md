@@ -23,7 +23,7 @@ It is a simple two-player chess game that runs in the Git Bash Terminal. The pla
 
 # How to execute the project
 
-What you need: Java 17, Git and a IDE (Eclipse, Intellij, etc...)
+What you need: Java 17, Git, and a IDE (Eclipse, Intellij, etc...)
 
 ```bash
 # Clone the repository
@@ -40,7 +40,7 @@ C:\chess-java\out\production\chess (intellij)
 or
 C:\chess-java\bin (eclipse)
 
-# Open Git Bash terminal and run the command
+# Open Git Bash terminal, and run the command
 java application/Program
 
 # Play the game :)
