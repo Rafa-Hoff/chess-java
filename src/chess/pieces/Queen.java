@@ -15,6 +15,11 @@ public class Queen extends ChessPiece {
         return "Q";
     }
 
+    /**
+     * Responsible for checking the possible moves of the Queen.
+     * The movements are divided into: up, left, right, down, northwest, northeast, southeast, southwest.
+     * @return matrix of possible moves.
+     */
     @Override
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];

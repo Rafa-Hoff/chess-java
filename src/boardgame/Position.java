@@ -1,5 +1,8 @@
 package boardgame;
 
+/**
+ * Represents a position in the row and column of the board.
+ */
 public class Position {
 
     private int row;
@@ -26,6 +29,11 @@ public class Position {
         this.column = column;
     }
 
+    /**
+     * Assigns a new row and column to a position.
+     * @param row
+     * @param column
+     */
     public void setValues(int row, int column) {
         this.row = row;
         this.column = column;

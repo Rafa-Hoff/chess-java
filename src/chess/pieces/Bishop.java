@@ -15,6 +15,11 @@ public class Bishop extends ChessPiece {
         return "B";
     }
 
+    /**
+     * Responsible for checking the possible moves of the Bishop.
+     * The movements are divided into: northwest, northeast, southeast, southwest.
+     * @return matrix of possible moves.
+     */
     @Override
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];

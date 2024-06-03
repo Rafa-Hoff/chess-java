@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Organize and manage the chess match.
+ */
 public class ChessMatch {
     private int turn;
     private Color currentPlayer;
@@ -54,6 +57,13 @@ public class ChessMatch {
 
     //irá percorrer a matriz de peças do tabuleiro(Board) e para cada peça
     //do tabuleiro será feito um Downcasting para ChessPiece
+
+    /**
+     * Makes the program to only access the class piece in the chess layer, and not on the board layer.
+     * This function will go through the matrix of board pieces and for each board piece it will do a
+     * downcast to "ChessPiece" class.
+     * @return matrix of pieces from the current match.
+     */
     public ChessPiece[][] getPieces() {
         ChessPiece[][] mat = new ChessPiece[board.getRows()][board.getColumns()];
         for (int i=0; i<board.getRows(); i++) {
@@ -64,12 +74,24 @@ public class ChessMatch {
         return mat;
     }
 
-    public boolean [][] possbileMoves(ChessPosition sourcePosition) {
+    /**
+     * Helps the application to print the possible moves from a source position.
+     * @param sourcePosition row and column of the piece.
+     * @return boolean matrix of possible moves.
+     */
+    public boolean [][] possibleMoves(ChessPosition sourcePosition) {
         Position position = sourcePosition.toPosition();
         validateSourcePosition(position);
         return board.piece(position).possibleMoves();
     }
 
+    /**
+     * Responsible to execute piece movements, capturing pieces, special moves, pass turns, promote Pawn pieces, confirm the checkmate
+     * and prevents the player from placing himself in "CHECK!".
+     * @param sourcePosition of the piece.
+     * @param targetPosition of the piece.
+     * @return piece in the new position.
+     */
     public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
         Position source = sourcePosition.toPosition();
         Position target = targetPosition.toPosition();
@@ -113,6 +135,11 @@ public class ChessMatch {
         return (ChessPiece)capturedPiece;
     }
 
+    /**
+     * Swap the promoted Pawn for the new piece chosen by the user.
+     * @param type
+     * @return the new piece.
+     */
     public  ChessPiece replacePromotedPiece(String type) {
         if (promoted == null) {
             throw new IllegalStateException("There is no piece to be promoted");
@@ -132,6 +159,12 @@ public class ChessMatch {
         return newPiece;
     }
 
+    /**
+     * Confirms what piece the user chose and returns it.
+     * @param type of piece.
+     * @param color of the user's piece.
+     * @return the piece chosen by the user.
+     */
     private ChessPiece newPiece(String type, Color color) {
         if (type.equals("B")) return new Bishop(board, color);
         if (type.equals("N")) return new Knight(board, color);
@@ -139,6 +172,13 @@ public class ChessMatch {
         return new Rook(board, color);
     }
 
+    /**
+     * Executes the movements of the pieces, including capturing the enemy piece.
+     * There are also special moves for some pieces. Increases move count.
+     * @param source position.
+     * @param target position.
+     * @return a captured piece.
+     */
     private Piece makeMove(Position source, Position target) {
         ChessPiece p = (ChessPiece)board.removePiece(source);
         p.increaseMoveCount();
@@ -187,6 +227,13 @@ public class ChessMatch {
         return capturedPiece;
     }
 
+    /**
+     * If a piece movement causes a "CHECK!" the movement will be canceled and the move count will be decreased,
+     * this includes the special moves too.
+     * @param source position.
+     * @param target position.
+     * @param capturedPiece
+     */
     private void undoMove(Position source, Position target, Piece capturedPiece) {
         ChessPiece p = (ChessPiece)board.removePiece(target);
         p.decreaseMoveCount();
@@ -232,6 +279,11 @@ public class ChessMatch {
 
     }
 
+    /**
+     * Checks if this is the right piece of the current player, if exists a piece in
+     * the position and if the piece can move.
+     * @param position row and column.
+     */
     private void validateSourcePosition(Position position) {
         if (!board.thereIsAPiece(position)) {
             throw new ChessException("There is no piece on source position");
@@ -244,21 +296,38 @@ public class ChessMatch {
         }
     }
 
+    /**
+     * Checks if the piece can move for the target position.
+     * @param source position.
+     * @param target position.
+     */
     private void validateTargetPosition(Position source, Position target){
         if (!board.piece(source).possibleMove(target)) {
             throw new ChessException("The chosen piece can't move to target position");
         }
     }
 
+    /**
+     * Switch between players after each turn and increase the turn count.
+     */
     private void nextTurn() {
         turn++;
         currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 
+    /**
+     * @param color of the piece.
+     * @return opponent's color.
+     */
     private Color opponent(Color color) {
         return (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 
+    /**
+     * Responsible for finding the king of a certain color on the chessboard.
+     * @param color
+     * @return king's color.
+     */
     private ChessPiece king(Color color) {
         List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == color).collect(Collectors.toList());
         for (Piece p : list) {
@@ -269,6 +338,12 @@ public class ChessMatch {
         throw new IllegalStateException("There is no " + color + " king on the board");
     }
 
+    /**
+     * Will scan a list of all the opposing pieces and test the possible movements of each one of them and
+     * if any movement of the pieces reaches the king causing the "CHECK!".
+     * @param color of the King.
+     * @return boolean.
+     */
     private boolean testCheck(Color color) {
         Position kingPosition = king(color).getChessPosition().toPosition();
         List<Piece> opponentPieces = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == opponent(color)).collect(Collectors.toList());
@@ -281,6 +356,12 @@ public class ChessMatch {
         return false;
     }
 
+    /**
+     * Will scan a list of all the pieces of the current player and test possible movements of each one of them,
+     * if no piece can protect the King from "CHECK!", it will be checkmated.
+     * @param color of the pieces.
+     * @return boolean.
+     */
     private boolean testCheckMate(Color color) {
         if (!testCheck(color)) {
             return false;
@@ -306,11 +387,20 @@ public class ChessMatch {
         return true;
     }
 
+    /**
+     * Use the chess coordinates to place a new piece in determined position.
+     * @param column is a letter(char).
+     * @param row is a number.
+     * @param piece
+     */
     private void placeNewPiece(char column, int row, ChessPiece piece) {
         board.placePiece(piece, new ChessPosition(column, row).toPosition());
         piecesOnTheBoard.add(piece);
     }
 
+    /**
+     * Responsible for starting the chess match and placing the pieces in the correct position.
+     */
     private void initialSetup() {
         placeNewPiece('a', 1, new Rook(board, Color.WHITE));
         placeNewPiece('b', 1, new Knight(board, Color.WHITE));

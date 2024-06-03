@@ -23,6 +23,11 @@ public class Board {
         return columns;
     }
 
+    /**
+     * @param row
+     * @param column
+     * @return the piece of the indicated row and column.
+     */
     public Piece piece(int row, int column) {
         if (!positionExists(row, column)) {
             throw new BoardException("Position not on the board.");
@@ -30,6 +35,10 @@ public class Board {
         return pieces[row][column];
     }
 
+    /**
+     * @param position
+     * @return the piece from the indicated position.
+     */
     public Piece piece(Position position) {
         if (!positionExists(position)) {
             throw new BoardException("Position not on the board.");
@@ -37,6 +46,12 @@ public class Board {
         return pieces[position.getRow()][position.getColumn()];
     }
 
+    /**
+     * Places a piece in the indicated position after checking if there is no
+     * other piece in the same position.
+     * @param piece
+     * @param position
+     */
     public void placePiece(Piece piece, Position position) {
         if (thereIsAPiece(position)) {
             throw new BoardException("there is already a piece on position " + position);
@@ -45,6 +60,11 @@ public class Board {
         piece.position = position;
     }
 
+    /**
+     * Removes a piece from the indicated position after checking if the position and the piece exists.
+     * @param position
+     * @return null.
+     */
     public Piece removePiece(Position position) {
         if (!positionExists(position)) {
             throw new BoardException("Position not on the board");
@@ -58,14 +78,30 @@ public class Board {
         return aux;
     }
 
+    /**
+     * Checks if the position exists using the row and column. Helps the
+     * other "positionExists" function.
+     * @param row
+     * @param column
+     * @return boolean.
+     */
     private boolean positionExists(int row, int column) {
         return row >= 0 && row < rows && column >= 0 && column < columns;
     }
-
+    /**
+     * Checks if the position exists.
+     * @param position
+     * @return boolean.
+     */
     public boolean positionExists(Position position) {
         return positionExists(position.getRow(), position.getColumn());
     }
 
+    /**
+     * Checks if there is a piece on position.
+     * @param position
+     * @return boolean.
+     */
     public boolean thereIsAPiece(Position position) {
         if (!positionExists(position)) {
             throw new BoardException("Position not on the board.");

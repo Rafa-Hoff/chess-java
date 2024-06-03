@@ -20,6 +20,10 @@ public class Knight extends ChessPiece {
         return p == null || p.getColor() != getColor();
     }
 
+    /**
+     * Responsible for checking the possible moves of the Knight piece.
+     * @return matrix of possible moves.
+     */
     @Override
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];

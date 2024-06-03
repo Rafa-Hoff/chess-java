@@ -20,6 +20,11 @@ public class King extends ChessPiece {
         return "K";
     }
 
+    /**
+     * Checks if the King can move.
+     * @param position row and column.
+     * @return boolean.
+     */
     private boolean canMove(Position position) {
         ChessPiece p = (ChessPiece)getBoard().piece(position);
         return p == null || p.getColor() != getColor();
@@ -30,6 +35,12 @@ public class King extends ChessPiece {
         return p != null && p instanceof Rook && p.getColor() == getColor() && p.getMoveCount() == 0;
     }
 
+    /**
+     * Responsible for checking the possible moves of the King.
+     * The movements are divided into: up, down, left, right, northwest, northeast, southwest, southeast.
+     * Can enable a special move for the King if possible.
+     * @return matrix of possible moves.
+     */
     @Override
     public boolean[][] possibleMoves() {
         boolean[][] mat = new boolean[getBoard().getRows()][getBoard().getColumns()];
